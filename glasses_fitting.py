@@ -36,6 +36,7 @@ def overlay(img, glasses, pos):
 	img1[..., 2] = (img1[..., 2] * alpha + img2[..., 2] * (1. - alpha)).astype(np.uint8)
 
 
+
 # 카메라 열기
 cap = cv2.VideoCapture(0)
 
@@ -51,8 +52,8 @@ fourcc = cv2.VideoWriter_fourcc(*'DIVX')
 out = cv2.VideoWriter('output.avi', fourcc, 30, (w, h))
 
 # Haar-like XML 파일 열기
-face_classifier = cv2.CascadeClassifier('.\haarcascade_frontalface_alt2.xml')#얼굴 검출
-eye_classifier = cv2.CascadeClassifier('.\haarcascade_eye.xml')#눈 검출
+face_classifier = cv2.CascadeClassifier('./haarcascade_frontalface_alt2.xml')#얼굴 검출
+eye_classifier = cv2.CascadeClassifier('./haarcascade_eye.xml')#눈 검출
 
 if face_classifier.empty() or eye_classifier.empty():
 	print('XML load failed!')
