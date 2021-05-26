@@ -36,6 +36,7 @@ def overlay(img, glasses, pos):
 	img1[..., 2] = (img1[..., 2] * alpha + img2[..., 2] * (1. - alpha)).astype(np.uint8)
 
 
+
 # 카메라 열기
 cap = cv2.VideoCapture(0)
 
@@ -51,8 +52,8 @@ fourcc = cv2.VideoWriter_fourcc(*'DIVX')
 out = cv2.VideoWriter('output.avi', fourcc, 30, (w, h))
 
 # Haar-like XML 파일 열기
-face_classifier = cv2.CascadeClassifier('.\haarcascade_frontalface_alt2.xml')#얼굴 검출
-eye_classifier = cv2.CascadeClassifier('.\haarcascade_eye.xml')#눈 검출
+face_classifier = cv2.CascadeClassifier('./haarcascade_frontalface_alt2.xml')#얼굴 검출
+eye_classifier = cv2.CascadeClassifier('./haarcascade_eye.xml')#눈 검출
 
 if face_classifier.empty() or eye_classifier.empty():
 	print('XML load failed!')
@@ -61,7 +62,7 @@ if face_classifier.empty() or eye_classifier.empty():
 # 안경 PNG 파일 열기 (Image from http://www.pngall.com/)
 # 알파채널: 기본 채널외에 사용자가 선택영역을 저장하고 다시 불러(LOAD)사용할 수 있는 것으로 선택부분은 흰색으로 
 # 선택되지 않는 부분은 검정색으로 표현한다.
-glasses = cv2.imread('.\glasses.png', cv2.IMREAD_UNCHANGED) 
+glasses = cv2.imread('.\glasses\eyes-2022424_1280.png', cv2.IMREAD_UNCHANGED) 
 
 if glasses is None:
 	print('PNG image open failed!')
@@ -69,8 +70,8 @@ if glasses is None:
 
 # 합성 할 안경 영상 위치좌표 계산
 ew, eh = glasses.shape[:2]  # 가로, 세로 크기
-ex1, ey1 = 240, 300  # 왼쪽 눈 좌표
-ex2, ey2 = 660, 300  # 오른쪽 눈 좌표
+ex1, ey1 = 240, 220  # 왼쪽 눈 좌표
+ex2, ey2 = 660, 220  # 오른쪽 눈 좌표
 
 # 매 프레임에 대해 얼굴 검출 및 안경 합성
 while True:
@@ -87,7 +88,7 @@ while True:
 
 	# 얼굴 검출한 부분에서 눈 검출하기
 	for (x, y, w, h) in faces:
-		#cv2.rectangle(frame, (x, y, w, h), (255, 0, 255), 2)
+		cv2.rectangle(frame, (x, y, w, h), (255, 0, 255), 2)
 
 		# 눈 검출
 		faceROI = frame[y:y + h // 2, x:x + w]
