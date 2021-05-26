@@ -134,8 +134,7 @@ while True:
 		overlay(frame, glasses2, pos)
 
 	# 프레임 저장 및 화면 출력
-	# out.write(frame)
-
+	out.write(frame)
 	cv2.imshow('frame', frame)
 
 	if cv2.waitKey(1) == 27:
