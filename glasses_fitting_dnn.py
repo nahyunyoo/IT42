@@ -43,15 +43,18 @@ h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT)) #기본 카메라 높이
 
 # 합성된 결과 동영상 파일로 저장
 fourcc = cv2.VideoWriter_fourcc(*'DIVX')
-out = cv2.VideoWriter('output.avi', fourcc, 30, (w, h))
+video_out = cv2.VideoWriter('output.avi', fourcc, 10, (w, h), isColor=True)
 
 eye_classifier = cv2.CascadeClassifier('./haarcascade_eye.xml')#눈 검출
+net = cv2.dnn.readNet(model, config)
+
+if not video_out.isOpened():
+	print('video open failed')
+	sys.exit()
 
 if eye_classifier.empty():
 	print('XML load failed!')
 	sys.exit()
-
-net = cv2.dnn.readNet(model, config)
 
 if net.empty():
 	print('Net open failed!')
@@ -117,9 +120,6 @@ while True:
 		if eye_x1 > eye_x2:
 			eye_x1, eye_y1, eye_x2, eye_y2 = eye_x2, eye_y2, eye_x1, eye_y1
 
-		cv2.circle(faceROI, (eye_x1, eye_y1), 5, (255, 0, 0), 2, cv2.LINE_AA)
-		cv2.circle(faceROI, (eye_x2, eye_y2), 5, (255, 0, 0), 2, cv2.LINE_AA)
-
 		# 두 눈 사이의 거리를 이용하여 스케일링 팩터를 계산 (두 눈이 수평하다고 가정)
 		# (x2-x1): 실제 입력영상에서의 두 눈의 간격
 		# (ex2 - ex1): PNG파일(안경영상)에서의 두 눈의 간격
@@ -134,11 +134,12 @@ while True:
 		overlay(frame, glasses2, pos)
 
 	# 프레임 저장 및 화면 출력
-	out.write(frame)
 	cv2.imshow('frame', frame)
+	video_out.write(frame)
 
 	if cv2.waitKey(1) == 27:
 		break
 
 cap.release()
+video_out.release()
 cv2.destroyAllWindows()
